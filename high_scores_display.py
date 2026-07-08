@@ -3,7 +3,6 @@ import pygame.font
 
 
 class HighScoresDisplay:
-    """Класс для отображения таблицы рекордов."""
 
     def __init__(self, ai_game):
         self.ai_game = ai_game
@@ -17,25 +16,20 @@ class HighScoresDisplay:
         self.active = False
 
     def show(self):
-        """Показывает таблицу рекордов."""
         self.active = True
 
     def hide(self):
-        """Скрывает таблицу рекордов."""
         self.active = False
 
     def draw(self):
-        """Рисует таблицу рекордов."""
         if not self.active:
             return
 
-        # Затемнённый фон
         overlay = pygame.Surface((self.screen_rect.width, self.screen_rect.height))
         overlay.set_alpha(200)
         overlay.fill((0, 0, 0))
         self.screen.blit(overlay, (0, 0))
 
-        # Заголовок
         title_text = "ТАБЛИЦА РЕКОРДОВ"
         title_surf = self.font.render(title_text, True, (255, 215, 0))
         title_rect = title_surf.get_rect()
@@ -46,7 +40,6 @@ class HighScoresDisplay:
         scores = self.high_scores.get_scores()
 
         if not scores:
-            # Нет рекордов
             empty_text = "Нет рекордов. Станьте первым!"
             empty_surf = self.font_small.render(empty_text, True, (200, 200, 200))
             empty_rect = empty_surf.get_rect()
@@ -54,7 +47,6 @@ class HighScoresDisplay:
             empty_rect.centery = self.screen_rect.centery
             self.screen.blit(empty_surf, empty_rect)
         else:
-            # Заголовки таблицы
             headers = ["#", "Имя", "Рейтинг", "Уровень", "Пули"]
             header_x = [80, 200, 450, 700, 900]
 
@@ -65,11 +57,9 @@ class HighScoresDisplay:
                 header_rect.top = 140
                 self.screen.blit(header_surf, header_rect)
 
-            # Разделительная линия
             pygame.draw.line(self.screen, (100, 100, 100),
                              (50, 180), (self.screen_rect.width - 50, 180), 2)
 
-            # Список рекордов
             y_offset = 200
             for i, score in enumerate(scores[:10]):
                 color = (255, 215, 0) if i == 0 else (255, 255, 255)
@@ -91,7 +81,6 @@ class HighScoresDisplay:
 
                 y_offset += 45
 
-        # Кнопка закрытия
         close_text = "Нажмите ESC для выхода"
         close_surf = self.font_small.render(close_text, True, (150, 150, 150))
         close_rect = close_surf.get_rect()

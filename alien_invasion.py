@@ -24,10 +24,8 @@ from victory_celebration import VictoryCelebration
 
 
 class AlienInvasion:
-    """Класс для управления ресурсами и поведением игры."""
 
     def __init__(self):
-        """Инициализирует игру и создает игровые ресурсы."""
         pygame.init()
         self.settings = Settings()
 
@@ -291,7 +289,6 @@ class AlienInvasion:
             self.ship.moving_left = False
 
     def _fire_bullet(self):
-        """Создание нескольких пуль с веерным разлетом (максимум 3)."""
         if len(self.bullets) < self.settings.bullets_allowed:
             bullet_count = min(self.shop.bullet_count_level + 1, 3)
 

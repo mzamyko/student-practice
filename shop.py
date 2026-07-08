@@ -3,7 +3,6 @@ import pygame.font
 
 
 class Shop:
-    """Класс для магазина улучшений."""
 
     def __init__(self, ai_game):
         self.ai_game = ai_game
@@ -23,29 +22,24 @@ class Shop:
         self.button_hover_color = (0, 200, 255)
         self.button_text_color = (255, 255, 255)
 
-        # Текущие улучшения
         self.bullet_speed_level = 0
         self.bullet_count_level = 0
         self.ship_skin = 0
 
-        # Цены
         self.bullet_speed_price = 100
         self.bullet_count_price = 150
         self.ship_skin_price = 200
 
-        # Максимальные уровни
         self.max_bullet_speed = 3
         self.max_bullet_count = 2
-        self.max_skins = 4  # ← 4 скина (без зелёного)
+        self.max_skins = 4
 
-        # Сообщение об ошибке
         self.error_message = ""
         self.error_timer = 0
 
         self._create_buttons()
 
     def _create_buttons(self):
-        """Создаёт кнопки магазина."""
         center_x = self.screen_rect.centerx
         start_y = self.screen_rect.centery + 20
 
@@ -73,24 +67,19 @@ class Shop:
         )
 
     def start(self):
-        """Открывает магазин."""
         self.active = True
         self.error_message = ""
         self.error_timer = 0
         self.update_buttons()
 
     def close(self):
-        """Закрывает магазин."""
         self.active = False
 
     def show_error(self, message):
-        """Показывает сообщение об ошибке."""
         self.error_message = message
         self.error_timer = 120
 
     def update_buttons(self):
-        """Обновляет текст кнопок в зависимости от купленных улучшений."""
-        # Скорость пуль
         if self.bullet_speed_level >= self.max_bullet_speed:
             text = "Скорость пуль MAX"
             self.bullet_speed_button.text_surf = self.font_small.render(text, True, (100, 255, 100))
@@ -100,7 +89,6 @@ class Shop:
             self.bullet_speed_button.text_surf = self.font_small.render(text, True, self.button_text_color)
             self.bullet_speed_button.disabled = False
 
-        # Количество пуль
         if self.bullet_count_level >= self.max_bullet_count:
             text = "Пули MAX (3)"
             self.bullet_count_button.text_surf = self.font_small.render(text, True, (100, 255, 100))
@@ -110,7 +98,6 @@ class Shop:
             self.bullet_count_button.text_surf = self.font_small.render(text, True, self.button_text_color)
             self.bullet_count_button.disabled = False
 
-        # Скин корабля (4 скина: синий, красный, золотой, фиолетовый)
         skins = ["Синий", "Красный", "Золотой", "Фиолетовый"]
         if self.ship_skin >= self.max_skins:
             text = "Все скины MAX"
@@ -122,12 +109,10 @@ class Shop:
             self.ship_skin_button.text_surf = self.font_small.render(text, True, self.button_text_color)
             self.ship_skin_button.disabled = False
 
-        # Обновляем размеры кнопок
         for button in [self.bullet_speed_button, self.bullet_count_button, self.ship_skin_button]:
             button.update_rect()
 
     def handle_click(self, mouse_pos):
-        """Обрабатывает клик в магазине."""
         if not self.active:
             return False
 
@@ -176,7 +161,6 @@ class Shop:
         return False
 
     def _apply_skin(self):
-        """Применяет скин к кораблю (без зелёного)."""
         colors = [
             (0, 150, 255),    # Синий
             (255, 50, 50),    # Красный
@@ -185,7 +169,6 @@ class Shop:
         ]
         skin_index = self.ship_skin % len(colors)
         color = colors[skin_index]
-        # Передаём skin_index + 1, чтобы пропустить зелёный (индекс 0)
         self.ai_game.ship.change_color(color, skin_index + 1)
 
     def update(self):

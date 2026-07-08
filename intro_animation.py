@@ -4,56 +4,45 @@ from pygame.sprite import Sprite
 
 
 class IntroAnimation:
-    """Класс для анимации вторжения инопланетян."""
 
     def __init__(self, ai_game):
-        """Инициализирует анимацию."""
         self.ai_game = ai_game
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
         self.settings = ai_game.settings
 
-        # Состояние анимации
         self.active = False
         self.finished = False
         self.timer = 0
-        self.duration = 6000  # 100 секунд (было 5400)
+        self.duration = 6000
 
-        # Группы спрайтов
         self.aliens = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
         self.fire_particles = pygame.sprite.Group()
         self.ufo = None
         self.big_alien = None
 
-        # Фоновое изображение Земли
         self.earth_image = self._create_earth()
         self.earth_rect = self.earth_image.get_rect()
         self.earth_rect.center = self.screen_rect.center
 
-        # Огонь на Земле
         self.fire_image = None
 
-        # Текст
         self.font = pygame.font.SysFont('Arial', 60, bold=True)
         self.small_font = pygame.font.SysFont('Arial', 30)
         self.huge_font = pygame.font.SysFont('Arial', 100, bold=True)
 
-        # Фазы анимации
         self.phase = 0
         self.fire_started = False
         self.big_alien_appeared = False
 
-        # Флаг показа надписи
         self.show_final_text = False
         self.final_text_timer = 0
 
-        # Флаг очистки экрана
         self.clearing_screen = False
         self.clear_timer = 0
 
     def _create_earth(self):
-        """Создаёт изображение Земли."""
         earth_surf = pygame.Surface((300, 300), pygame.SRCALPHA)
 
         pygame.draw.circle(earth_surf, (50, 150, 255), (150, 150), 140)
@@ -79,7 +68,6 @@ class IntroAnimation:
         return earth_surf
 
     def _create_fire_on_earth(self):
-        """Создаёт много огня на поверхности Земли."""
         fire_surf = pygame.Surface((300, 300), pygame.SRCALPHA)
 
         fire_spots = [
@@ -112,7 +100,6 @@ class IntroAnimation:
         return fire_surf
 
     def _create_fire_particles(self):
-        """Создаёт летающие частицы огня над Землёй."""
         for _ in range(40):
             particle = FireParticle(
                 self.screen_rect.centerx + random.randint(-150, 150),
@@ -121,11 +108,9 @@ class IntroAnimation:
             self.fire_particles.add(particle)
 
     def _create_big_alien(self):
-        """Создаёт огромного пришельца на фоне."""
         self.big_alien = BigAlien(self.screen_rect)
 
     def start(self):
-        """Запускает анимацию."""
         self.active = True
         self.finished = False
         self.timer = 0
@@ -149,7 +134,6 @@ class IntroAnimation:
         self._create_first_wave()
 
     def _create_first_wave(self):
-        """Создаёт первую волну пришельцев (сверху)."""
         for i in range(5):
             x = random.randint(50, self.screen_rect.width - 50)
             y = random.randint(-1500, -400)
@@ -161,7 +145,6 @@ class IntroAnimation:
             self.aliens.add(alien)
 
     def _create_second_wave(self):
-        """Создаёт вторую волну пришельцев (со всех сторон)."""
         for i in range(8):
             x = random.randint(50, self.screen_rect.width - 50)
             y = random.randint(-1800, -400)
@@ -193,7 +176,6 @@ class IntroAnimation:
             self.aliens.add(alien)
 
     def _create_final_wave(self):
-        """Создаёт финальную волну пришельцев (массовое вторжение со всех сторон)."""
         for i in range(30):
             side = random.choice(['top', 'bottom', 'left', 'right'])
             if side == 'top':
@@ -217,16 +199,13 @@ class IntroAnimation:
             self.aliens.add(alien)
 
     def update(self):
-        """Обновляет анимацию."""
         if not self.active:
             return
 
         self.timer += 1
 
-        # Если начали очистку экрана
         if self.clearing_screen:
             self.clear_timer += 1
-            # Через 3 секунды показываем надпись
             if self.clear_timer > 180:
                 self.clearing_screen = False
                 self.show_final_text = True
@@ -269,10 +248,8 @@ class IntroAnimation:
                 self.big_alien_appeared = True
                 self._create_big_alien()
 
-        # Очищаем экран и показываем надпись (было 4800, стало 5000)
         if self.big_alien_appeared and not self.show_final_text:
-            if self.timer >= 5000:  # ← было 4800
-                # Очищаем всё
+            if self.timer >= 5000:
                 self.aliens.empty()
                 self.explosions.empty()
                 self.fire_particles.empty()
@@ -280,11 +257,10 @@ class IntroAnimation:
                 self.big_alien = None
                 self.ufo = None
                 self.earth_image = None
-                # Начинаем очистку экрана
+
                 self.clearing_screen = True
                 self.clear_timer = 0
 
-        # Смена фаз (растянуто)
         if self.timer < 1500:
             self.phase = 0
         elif self.timer < 3000:
@@ -296,7 +272,6 @@ class IntroAnimation:
             if self.timer == 3000:
                 self._create_final_wave()
 
-        # Отключаем надпись через 15 секунд (было 480, стало 900)
         if self.show_final_text and self.timer - self.final_text_timer > 900:  # ← было 480
             self.active = False
             self.finished = True
@@ -314,20 +289,15 @@ class IntroAnimation:
         if not self.active:
             return
 
-        # Тёмный фон
         self.screen.fill((5, 5, 20))
 
-        # Если очищаем экран - показываем чёрный экран (пауза)
         if self.clearing_screen:
             return
 
-        # Если показываем финальную надпись
         if self.show_final_text:
-            # Пульсирующая надпись
             pulse = abs(pygame.math.Vector2(1, 0).rotate(self.timer * 2)[1])
             alpha = int(180 + 75 * pulse)
 
-            # Текст "СПАСИ ЖИТЕЛЕЙ ЗЕМЛИ!"
             text1 = "СПАСИ"
             text2 = "ЖИТЕЛЕЙ ЗЕМЛИ"
 
@@ -336,7 +306,6 @@ class IntroAnimation:
             text2_surf = self.huge_font.render(text2, True, (255, 255, 100))
             text2_surf.set_alpha(alpha)
 
-            # Тени
             shadow1_surf = self.huge_font.render(text1, True, (100, 50, 0))
             shadow1_surf.set_alpha(alpha)
             shadow2_surf = self.huge_font.render(text2, True, (100, 50, 0))
@@ -350,7 +319,6 @@ class IntroAnimation:
             text2_rect.centerx = self.screen_rect.centerx
             text2_rect.centery = self.screen_rect.centery + 60
 
-            # Рисуем тени
             shadow1_rect = shadow1_surf.get_rect()
             shadow1_rect.centerx = self.screen_rect.centerx + 4
             shadow1_rect.centery = self.screen_rect.centery - 56
@@ -365,7 +333,6 @@ class IntroAnimation:
             self.screen.blit(text1_surf, text1_rect)
             self.screen.blit(text2_surf, text2_rect)
 
-            # Подпись
             sub_text = "ПРИШЕЛЬЦЫ ЗАХВАТИЛИ ЗЕМЛЮ"
             sub_surf = self.small_font.render(sub_text, True, (255, 200, 200))
             sub_surf.set_alpha(alpha)
@@ -376,19 +343,15 @@ class IntroAnimation:
 
             return
 
-        # Рисуем большой пришелец
         if self.big_alien:
             self.big_alien.draw(self.screen)
 
-        # Рисуем Землю
         if self.earth_image:
             self.screen.blit(self.earth_image, self.earth_rect)
 
-        # Рисуем огонь
         if self.fire_image:
             self.screen.blit(self.fire_image, self.earth_rect)
 
-        # Рисуем частицы
         self.fire_particles.draw(self.screen)
         self.explosions.draw(self.screen)
         self.aliens.draw(self.screen)
@@ -396,7 +359,6 @@ class IntroAnimation:
         if self.ufo:
             self.ufo.draw(self.screen)
 
-        # Текст фазы
         if not self.show_final_text:
             if self.phase == 0:
                 text = "ПРИБЫТИЕ ПРИШЕЛЬЦЕВ"
@@ -414,7 +376,6 @@ class IntroAnimation:
             text_rect.top = 50
             self.screen.blit(text_surf, text_rect)
 
-        # Прогресс-бар
         if not self.show_final_text:
             progress = self.timer / self.duration
             bar_width = 400

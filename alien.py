@@ -162,11 +162,9 @@ class Alien(Sprite):
         return (self.rect.right >= screen_rect.right) or (self.rect.left <= 0)
 
     def should_shoot(self):
-        """Проверяет, должен ли жёлтый пришелец стрелять."""
         if self.alien_type != 'yellow':
             return False
         self.shoot_timer += 1
-        # ОЧЕНЬ-ОЧЕНЬ МЕДЛЕННО: 1 выстрел в 40-50 секунд
         if self.shoot_timer >= self.shoot_delay:
             self.shoot_timer = 0
             self.shoot_delay = random.randint(2400, 3000)

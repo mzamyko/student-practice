@@ -3,8 +3,6 @@ from pygame.sprite import Sprite
 
 
 class Ship(Sprite):
-    """Класс для управления кораблем."""
-
     def __init__(self, ai_game):
         super().__init__()
         self.screen = ai_game.screen
@@ -26,7 +24,6 @@ class Ship(Sprite):
         self.moving_left = False
 
     def _draw_ship(self):
-        """Рисует корабль текущим цветом и формой."""
         self.image.fill((0, 0, 0, 0))
 
         skin = self.skin_index % 5
@@ -100,7 +97,6 @@ class Ship(Sprite):
         pygame.draw.line(self.image, (200, 200, 200), (12, 50), (48, 50), 2)
 
     def change_color(self, color, skin_index=None):
-        """Меняет цвет и скин корабля."""
         self.color = color
         if skin_index is not None:
             self.skin_index = skin_index

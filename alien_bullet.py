@@ -3,14 +3,12 @@ from pygame.sprite import Sprite
 
 
 class AlienBullet(Sprite):
-    """Класс для пули пришельца."""
 
     def __init__(self, ai_game, x, y):
         super().__init__()
         self.screen = ai_game.screen
         self.settings = ai_game.settings
 
-        # Создаём пулю (жёлтую, медленную)
         self.image = pygame.Surface((6, 12), pygame.SRCALPHA)
         pygame.draw.ellipse(self.image, (255, 200, 50), (0, 0, 6, 12))
         pygame.draw.ellipse(self.image, (255, 255, 100), (1, 1, 4, 6))
@@ -23,11 +21,9 @@ class AlienBullet(Sprite):
         self.speed = 2.0
 
     def update(self):
-        """Перемещает пулю вниз."""
         self.rect.y += self.speed
         if self.rect.top > self.screen.get_rect().bottom:
             self.kill()
 
     def draw_bullet(self):
-        """Рисует пулю на экране."""
         self.screen.blit(self.image, self.rect)

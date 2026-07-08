@@ -3,10 +3,8 @@ import pygame.font
 
 
 class Menu:
-    """Класс для создания главного меню."""
 
     def __init__(self, ai_game):
-        """Инициализирует меню."""
         self.ai_game = ai_game
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
