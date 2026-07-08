@@ -1,772 +1,504 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ALIEN SKY — Спаси жителей Земли</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alien Sky - Спаси Землю от Пришельцев</title>
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-
         :root {
-            --neon-green: #32e875;
-            --neon-pink: #ff64a0;
-            --neon-yellow: #ffd700;
-            --neon-blue: #64d8ff;
-            --dark-bg: #0a0e1a;
-            --card-bg: rgba(10, 14, 30, 0.85);
-        }
-
-        html {
-            scroll-behavior: smooth;
+            --dark-navy: #0a0e1a;
+            --deep-purple: #1a0b2e;
+            --medium-purple: #431c7a;
+            --light-cream: #f5e6c8;
+            --bright-green: #00ff88;
+            --hot-pink: #ff0066;
+            --cyan: #00d4ff;
+            --yellow: #ffd700;
+            --blue: #3498db;
         }
 
         body {
-            font-family: 'Orbitron', monospace;
-            background: var(--dark-bg);
-            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-navy);
+            color: var(--light-cream);
             overflow-x: hidden;
-            min-height: 100vh;
         }
 
-        /* ===== ФОН С ЗВЁЗДАМИ ===== */
-        #stars-canvas {
+        /* Navigation */
+        nav {
             position: fixed;
             top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* ===== ОБЩИЕ КОНТЕЙНЕРЫ ===== */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        section {
-            padding: 80px 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-        }
-
-        /* ===== ШАПКА ===== */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 16px 0;
-            background: rgba(10, 14, 26, 0.9);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(50, 232, 117, 0.2);
-            transition: all 0.3s;
-        }
-
-        header .container {
+            background: rgba(10, 11, 26, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
+            z-index: 1000;
+            border-bottom: 3px solid var(--medium-purple);
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--neon-green);
-            text-shadow: 0 0 20px rgba(50, 232, 117, 0.4);
-            letter-spacing: 3px;
-        }
-
-        .logo span {
-            color: var(--neon-pink);
-        }
-
-        nav {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        nav a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-            padding: 6px 0;
-            border-bottom: 2px solid transparent;
-        }
-
-        nav a:hover {
-            color: var(--neon-green);
-            border-bottom-color: var(--neon-green);
-            text-shadow: 0 0 20px rgba(50, 232, 117, 0.3);
-        }
-
-        .version-badge {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* ===== HERO-БЛОК ===== */
-        #hero {
-            min-height: 100vh;
-            padding-top: 100px;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            position: relative;
-        }
-
-        #hero .hero-content {
-            width: 100%;
-        }
-
-        #hero .alien-big {
-            font-size: 120px;
-            display: block;
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 40px rgba(50, 232, 117, 0.3));
-        }
-
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0) rotate(-2deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(2deg);
-            }
-        }
-
-        #hero h1 {
-            font-size: clamp(48px, 10vw, 96px);
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: none;
-            margin: 16px 0 8px;
-            letter-spacing: 6px;
-        }
-
-        #hero .subtitle {
-            font-size: clamp(18px, 3vw, 32px);
-            color: var(--neon-pink);
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-shadow: 0 0 30px rgba(255, 100, 160, 0.3);
-        }
-
-        #hero .subtitle-small {
-            font-size: clamp(14px, 1.8vw, 22px);
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 8px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--yellow);
+            text-shadow: 3px 3px 0px var(--medium-purple);
             letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light-cream);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--light-cream);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            padding: 4rem 5%;
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--deep-purple) 50%, var(--medium-purple) 100%);
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(2px 2px at 20% 30%, var(--light-cream), transparent),
+                radial-gradient(2px 2px at 60% 70%, var(--bright-green), transparent),
+                radial-gradient(1px 1px at 50% 50%, var(--cyan), transparent),
+                radial-gradient(1px 1px at 80% 10%, var(--hot-pink), transparent);
+            background-size: 200% 200%;
+            animation: stars 15s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes stars {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-text h1 {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            color: var(--yellow);
+            text-shadow: 4px 4px 0px var(--medium-purple);
+        }
+
+        .hero-text .subtitle {
+            font-size: 2rem;
+            color: var(--hot-pink);
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            color: var(--light-cream);
+            line-height: 1.6;
+            opacity: 0.9;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 16px;
+            gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 32px;
         }
 
-        .btn {
-            padding: 16px 48px;
-            font-family: 'Orbitron', monospace;
-            font-weight: 700;
-            font-size: 16px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            color: white;
             text-decoration: none;
-            letter-spacing: 2px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.5);
+            border: 2px solid white;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--neon-green), #1a9a4a);
-            color: #0a0e1a;
-            box-shadow: 0 0 40px rgba(50, 232, 117, 0.3);
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(52, 152, 219, 0.7);
         }
 
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 60px rgba(50, 232, 117, 0.5);
+        .github-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #333, #555);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--light-cream);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+        .github-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(135deg, #444, #666);
         }
 
-        .btn-secondary:hover {
-            border-color: var(--neon-green);
-            background: rgba(50, 232, 117, 0.1);
-        }
-
-        /* ===== СЕКЦИЯ КОРАБЛЕЙ ===== */
-        #ships {
-            background: rgba(0, 0, 0, 0.3);
-            min-height: auto;
-            padding: 60px 0;
+        /* Features Section */
+        .features {
+            padding: 5rem 5%;
+            background: var(--dark-navy);
         }
 
         .section-title {
-            font-size: clamp(28px, 4vw, 48px);
-            font-weight: 900;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 3rem;
         }
 
-        .section-title .highlight {
-            color: var(--neon-green);
+        .section-title h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--yellow);
+            text-shadow: 3px 3px 0px var(--medium-purple);
         }
 
-        .section-subtitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-            letter-spacing: 2px;
-            margin-bottom: 48px;
+        .section-title p {
+            color: var(--light-cream);
+            font-size: 1.3rem;
+            opacity: 0.8;
         }
 
-        .ships-grid {
+        .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .ship-card {
-            background: var(--card-bg);
+        .feature-card {
+            background: linear-gradient(135deg, rgba(67, 28, 122, 0.4), rgba(10, 11, 26, 0.6));
+            border: 2px solid var(--medium-purple);
             border-radius: 20px;
-            padding: 30px 20px;
+            padding: 2.5rem;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s;
-            cursor: pointer;
+            transition: transform 0.3s, border-color 0.3s;
         }
 
-        .ship-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--neon-green);
-            box-shadow: 0 0 40px rgba(50, 232, 117, 0.1);
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cyan);
         }
 
-        .ship-card .ship-icon {
-            font-size: 56px;
-            display: block;
-            margin-bottom: 12px;
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
         }
 
-        .ship-card .ship-name {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 1px;
+        .feature-card h3 {
+            color: var(--bright-green);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
 
-        .ship-card .ship-color {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-top: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+        .feature-card p {
+            color: var(--light-cream);
+            line-height: 1.6;
+            opacity: 0.85;
         }
 
-        /* ===== СЕКЦИЯ ПРИШЕЛЬЦЕВ ===== */
-        #aliens {
-            min-height: auto;
-            padding: 60px 0;
-        }
-
-        .aliens-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 24px;
-        }
-
-        .alien-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 24px 16px;
+        /* GitHub Section */
+        .github-section {
+            padding: 5rem 5%;
+            background: linear-gradient(180deg, var(--dark-navy), var(--deep-purple));
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s;
         }
 
-        .alien-card:hover {
-            border-color: var(--neon-pink);
-            transform: scale(1.02);
-        }
-
-        .alien-card .alien-icon {
-            font-size: 64px;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .alien-card .alien-name {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .alien-card .alien-desc {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-top: 4px;
-            letter-spacing: 0.5px;
-        }
-
-        .alien-card .tag {
-            display: inline-block;
-            font-size: 9px;
-            padding: 2px 12px;
+        .github-card {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(67, 28, 122, 0.5), rgba(10, 11, 26, 0.8));
             border-radius: 20px;
-            margin-top: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.5);
-            letter-spacing: 1px;
+            border: 3px solid var(--cyan);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
         }
 
-        /* ===== СЕКЦИЯ ПРАВИЛ ===== */
-        #rules {
-            background: rgba(0, 0, 0, 0.3);
-            min-height: auto;
-            padding: 60px 0;
+        .github-card h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--yellow);
+            text-shadow: 3px 3px 0px var(--medium-purple);
         }
 
-        .rules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-        }
-
-        .rule-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px 24px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .rule-card .rule-icon {
-            font-size: 40px;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        .rule-card h4 {
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: var(--neon-green);
-        }
-
-        .rule-card p {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
+        .github-card p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--light-cream);
+            opacity: 0.9;
             line-height: 1.6;
         }
 
-        /* ===== СЕКЦИЯ СКРИНШОТОВ ===== */
-        #screenshots {
-            min-height: auto;
-            padding: 60px 0;
+        .github-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .screenshots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-        }
-
-        .screenshot-placeholder {
-            aspect-ratio: 16/9;
-            background: var(--card-bg);
-            border-radius: 16px;
-            border: 2px dashed rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.2);
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-
-        .screenshot-placeholder:hover {
-            border-color: var(--neon-blue);
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* ===== ФУТЕР ===== */
-        footer {
-            padding: 32px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        /* Download Section */
+        .download {
+            padding: 5rem 5%;
+            background: var(--dark-navy);
             text-align: center;
         }
 
-        footer .version {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.2);
-            letter-spacing: 3px;
+        .download-box {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(67, 28, 122, 0.5), rgba(10, 11, 26, 0.8));
+            border-radius: 20px;
+            border: 3px solid var(--cyan);
         }
 
-        /* ===== АДАПТИВ ===== */
+        .download-box p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--deep-purple);
+            text-align: center;
+            padding: 2rem;
+            color: var(--light-cream);
+            border-top: 3px solid var(--medium-purple);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            header .container {
+            .nav-links {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .hero-text .subtitle {
+                font-size: 1.5rem;
+            }
+
+            .hero-buttons {
                 flex-direction: column;
                 align-items: center;
             }
 
-            nav {
-                justify-content: center;
-                gap: 12px;
+            .section-title h2 {
+                font-size: 2rem;
             }
 
-            nav a {
-                font-size: 11px;
+            .github-card h2 {
+                font-size: 2rem;
             }
-
-            #hero .alien-big {
-                font-size: 72px;
-            }
-
-            .btn {
-                padding: 12px 32px;
-                font-size: 14px;
-            }
-
-            section {
-                padding: 40px 0;
-                min-height: auto;
-            }
-
-            .ships-grid,
-            .aliens-grid,
-            .rules-grid,
-            .screenshots-grid {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            }
-        }
-
-        @media (max-width: 480px) {
-            .logo {
-                font-size: 18px;
-            }
-
-            nav a {
-                font-size: 10px;
-                padding: 4px 0;
-            }
-
-            #hero .alien-big {
-                font-size: 56px;
-            }
-
-            #hero h1 {
-                font-size: 32px;
-                letter-spacing: 2px;
-            }
-        }
-
-        /* ===== АНИМАЦИИ ПРИ СКРОЛЛЕ ===== */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ===== ПОЛЗУНОК ГРОМКОСТИ ===== */
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .volume-control input[type="range"] {
-            width: 80px;
-            height: 4px;
-            -webkit-appearance: none;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            outline: none;
-        }
-
-        .volume-control input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--neon-green);
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(50, 232, 117, 0.4);
-        }
-
-        .volume-icon {
-            font-size: 18px;
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== ЗВЁЗДНЫЙ ФОН ===== -->
-    <canvas id="stars-canvas"></canvas>
-
-    <!-- ===== ШАПКА ===== -->
-    <header>
-        <div class="container">
-            <div class="logo">ALIEN <span>SKY</span></div>
-            <nav>
-                <a href="#hero">Играть</a>
-                <a href="#rules">Правила</a>
-                <a href="#ships">Корабли</a>
-                <a href="#aliens">Пришельцы</a>
-                <a href="#screenshots">Скриншоты</a>
-                <div class="volume-control">
-                    <span class="volume-icon">🔊</span>
-                    <input type="range" min="0" max="100" value="70" />
-                </div>
-                <span class="version-badge">v1.0</span>
-            </nav>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">👽 ALIEN SKY</div>
+        <ul class="nav-links">
+            <li><a href="#home">Главная</a></li>
+            <li><a href="#features">Особенности</a></li>
+            <li><a href="#github">GitHub</a></li>
+            <li><a href="#download">Играть</a></li>
+        </ul>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    </header>
+    </nav>
 
-    <!-- ===== HERO ===== -->
-    <section id="hero">
-        <div class="container">
-            <div class="hero-content">
-                <span class="alien-big">👾</span>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
                 <h1>ALIEN SKY</h1>
                 <div class="subtitle">СПАСИ ЖИТЕЛЕЙ ЗЕМЛИ</div>
-                <div class="subtitle-small">ПРИШЕЛЬЦЫ ЗАХВАТИЛИ ЗЕМЛЮ</div>
+                <p>
+                    Пришельцы захватили Землю! Управляй космическим кораблём, 
+                    уничтожай врагов, собирай звёзды и спаси планету от инопланетного вторжения. 
+                    Классическая аркада с современным геймплеем!
+                </p>
                 <div class="hero-buttons">
-                    <a href="#" class="btn btn-primary">🚀 Играть</a>
-                    <a href="#rules" class="btn btn-secondary">📖 Правила</a>
+                    <a href="#download" class="cta-button">🎮 ИГРАТЬ СЕЙЧАС</a>
+                    <a href="https://github.com/mzamyko/student-practice" target="_blank" class="github-button"> GitHub</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ===== КОРАБЛИ ===== -->
-    <section id="ships">
-        <div class="container">
-            <h2 class="section-title fade-up">🚀 <span class="highlight">Корабли</span></h2>
-            <p class="section-subtitle fade-up">Выбери свой стиль — 5 уникальных скинов</p>
-            <div class="ships-grid">
-                <div class="ship-card fade-up">
-                    <span class="ship-icon">🛸</span>
-                    <div class="ship-name">CLASSIC</div>
-                    <div class="ship-color" style="background:#32e875;"></div>
-                </div>
-                <div class="ship-card fade-up">
-                    <span class="ship-icon">✈️</span>
-                    <div class="ship-name">WING</div>
-                    <div class="ship-color" style="background:#ff64a0;"></div>
-                </div>
-                <div class="ship-card fade-up">
-                    <span class="ship-icon">🔄</span>
-                    <div class="ship-name">ROUND</div>
-                    <div class="ship-color" style="background:#ffd700;"></div>
-                </div>
-                <div class="ship-card fade-up">
-                    <span class="ship-icon">🔥</span>
-                    <div class="ship-name">JET</div>
-                    <div class="ship-color" style="background:#ff6a00;"></div>
-                </div>
-                <div class="ship-card fade-up">
-                    <span class="ship-icon">▶️</span>
-                    <div class="ship-name">ARROW</div>
-                    <div class="ship-color" style="background:#64d8ff;"></div>
-                </div>
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>🎯 ОСОБЕННОСТИ ИГРЫ</h2>
+            <p>Почему Alien Sky - это круто</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"></div>
+                <h3>Динамичные Бои</h3>
+                <p>Уничтожай волны пришельцев, уклоняйся от атак и собирай бонусы. Чем дальше - тем сложнее!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⭐</div>
+                <h3>Система Звёзд</h3>
+                <p>Собирай звёзды во время игры и трать их в магазине на улучшения корабля!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h3>Магазин</h3>
+                <p>Улучшай скорость пуль, увеличивай количество жизней и открывай новые скины кораблей!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👾</div>
+                <h3>Разные Враги</h3>
+                <p>Сражайся с зелёными, розовыми и жёлтыми пришельцами. У каждого свои особенности!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Рекорды</h3>
+                <p>Отслеживай свои лучшие результаты и ставь новые рекорды!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"></div>
+                <h3>Атмосфера</h3>
+                <p>Космическая музыка и звуковые эффекты погружают в игровой процесс!</p>
             </div>
         </div>
     </section>
 
-    <!-- ===== ПРИШЕЛЬЦЫ ===== -->
-    <section id="aliens">
-        <div class="container">
-            <h2 class="section-title fade-up">👾 <span class="highlight">Пришельцы</span></h2>
-            <p class="section-subtitle fade-up">Враги, которых нужно победить</p>
-            <div class="aliens-grid">
-                <div class="alien-card fade-up">
-                    <span class="alien-icon">🟢</span>
-                    <div class="alien-name" style="color:#32e875;">Зелёный</div>
-                    <div class="alien-desc">Классический пришелец</div>
-                    <span class="tag">Обычный</span>
-                </div>
-                <div class="alien-card fade-up">
-                    <span class="alien-icon">🩷</span>
-                    <div class="alien-name" style="color:#ff64a0;">Розовый</div>
-                    <div class="alien-desc">Злые красные глаза</div>
-                    <span class="tag">Агрессивный</span>
-                </div>
-                <div class="alien-card fade-up">
-                    <span class="alien-icon">🟡</span>
-                    <div class="alien-name" style="color:#ffd700;">Жёлтый</div>
-                    <div class="alien-desc">Стреляет лазерами</div>
-                    <span class="tag">⚠️ Опасный</span>
-                </div>
-                <div class="alien-card fade-up">
-                    <span class="alien-icon">🔵</span>
-                    <div class="alien-name" style="color:#64d8ff;">Синий</div>
-                    <div class="alien-desc">Пульсирует и летает</div>
-                    <span class="tag">Сложный</span>
-                </div>
-            </div>
+    <!-- GitHub Section -->
+    <section class="github-section" id="github">
+        <div class="github-card">
+            <div class="github-icon">💻</div>
+            <h2>ИСХОДНЫЙ КОД НА GITHUB</h2>
+            <p>
+                Хочешь посмотреть, как устроена игра изнутри? 
+                Исходный код Alien Sky открыт на GitHub! 
+                Изучай, форкай, улучшай и создавай свои версии!
+            </p>
+            <a href="https://github.com/mzamyko/student-practice" target="_blank" class="github-button" style="font-size: 1.3rem; padding: 1.2rem 3rem;">
+                🔗 Перейти в репозиторий
+            </a>
         </div>
     </section>
 
-    <!-- ===== ПРАВИЛА ===== -->
-    <section id="rules">
-        <div class="container">
-            <h2 class="section-title fade-up">📖 <span class="highlight">Правила</span></h2>
-            <p class="section-subtitle fade-up">Как спасти Землю от пришельцев</p>
-            <div class="rules-grid">
-                <div class="rule-card fade-up">
-                    <span class="rule-icon">🎯</span>
-                    <h4>Уничтожай врагов</h4>
-                    <p>Стреляй по пришельцам, чтобы очистить небо от захватчиков</p>
-                </div>
-                <div class="rule-card fade-up">
-                    <span class="rule-icon">⭐</span>
-                    <h4>Собирай звёзды</h4>
-                    <p>Подбирай бонусы для увеличения счёта и скорости</p>
-                </div>
-                <div class="rule-card fade-up">
-                    <span class="rule-icon">🛡️</span>
-                    <h4>Защищай Землю</h4>
-                    <p>Не дай пришельцам добраться до поверхности планеты</p>
-                </div>
-                <div class="rule-card fade-up">
-                    <span class="rule-icon">🏆</span>
-                    <h4>Устанавливай рекорды</h4>
-                    <p>Чем дольше выживаешь — тем выше твой результат</p>
-                </div>
-            </div>
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="section-title">
+            <h2> НАЧНИ ИГРУ</h2>
+            <p>Спаси Землю от пришельцев прямо сейчас!</p>
+        </div>
+        <div class="download-box">
+            <p>
+                🎯 <strong>Цель игры:</strong> Уничтожь всех пришельцев и спаси Землю!<br><br>
+                ⌨️ <strong>Управление:</strong> Стрелки или WASD для движения, Пробел для стрельбы<br><br>
+                ⭐ <strong>Собирай звёзды</strong> для покупки улучшений в магазине
+            </p>
+            <a href="#" class="cta-button" style="font-size: 1.5rem; padding: 1.5rem 4rem;">🚀 ИГРАТЬ</a>
         </div>
     </section>
 
-    <!-- ===== СКРИНШОТЫ ===== -->
-    <section id="screenshots">
-        <div class="container">
-            <h2 class="section-title fade-up">📸 <span class="highlight">Скриншоты</span></h2>
-            <p class="section-subtitle fade-up">Как выглядит игра Alien Sky</p>
-            <div class="screenshots-grid">
-                <div class="screenshot-placeholder fade-up">🖼️ Скриншот 1</div>
-                <div class="screenshot-placeholder fade-up">🖼️ Скриншот 2</div>
-                <div class="screenshot-placeholder fade-up">🖼️ Скриншот 3</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== ФУТЕР ===== -->
+    <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="version">ALIEN SKY v1.0</div>
-        </div>
+        <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">&copy; 2026 Alien Sky. Все права защищены.</p>
+        <p style="color: var(--medium-purple); margin-bottom: 1rem;">v1.0 🛸</p>
+        <p style="font-size: 0.9rem;">
+            Исходный код: 
+            <a href="https://github.com/mzamyko/student-practice" target="_blank" style="color: var(--cyan); text-decoration: none;">
+                github.com/mzamyko/student-practice
+            </a>
+        </p>
     </footer>
 
-    <!-- ===== СКРИПТЫ ===== -->
     <script>
-        // ===== ЗВЁЗДЫ НА CANVAS =====
-        (function() {
-            const canvas = document.getElementById('stars-canvas');
-            const ctx = canvas.getContext('2d');
-            let stars = [];
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '100%';
+            navLinks.style.left = '0';
+            navLinks.style.right = '0';
+            navLinks.style.background = 'rgba(10, 11, 26, 0.98)';
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.padding = '1rem';
+        }
 
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            function initStars(count = 200) {
-                stars = [];
-                for (let i = 0; i < count; i++) {
-                    stars.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        size: Math.random() * 2 + 0.5,
-                        speed: Math.random() * 0.3 + 0.1,
-                        alpha: Math.random() * 0.8 + 0.2
-                    });
-                }
-            }
-            initStars();
-
-            function drawStars() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                stars.forEach(star => {
-                    star.y += star.speed;
-                    if (star.y > canvas.height) {
-                        star.y = 0;
-                        star.x = Math.random() * canvas.width;
-                    }
-                    ctx.beginPath();
-                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-                    ctx.fill();
-                });
-                requestAnimationFrame(drawStars);
-            }
-            drawStars();
-
-            // Пересоздаём звёзды при ресайзе
-            window.addEventListener('resize', () => {
-                initStars();
-            });
-        })();
-
-        // ===== АНИМАЦИЯ ПРИ СКРОЛЛЕ =====
-        const fadeElements = document.querySelectorAll('.fade-up');
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        fadeElements.forEach(el => observer.observe(el));
-
-        // ===== ПЛАВНАЯ ПРОКРУТКА =====
+        // Smooth Scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
@@ -778,17 +510,18 @@
             });
         });
 
-        // ===== ОБРАБОТКА ГРОМКОСТИ =====
-        document.querySelector('.volume-control input').addEventListener('input', function() {
-            const icon = this.closest('.volume-control').querySelector('.volume-icon');
-            const val = parseInt(this.value);
-            if (val === 0) icon.textContent = '🔇';
-            else if (val < 30) icon.textContent = '🔈';
-            else if (val < 70) icon.textContent = '🔉';
-            else icon.textContent = '🔊';
+        // Animation on Scroll
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.feature-card');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (cardTop < windowHeight - 100) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
         });
-
-        console.log('👾 ALIEN SKY — Спаси жителей Земли!');
     </script>
 
 </body>
