@@ -13,7 +13,7 @@ class VictoryCelebration:
         self.active = False
         self.finished = False
         self.timer = 0
-        self.duration = 300  # 5 секунд
+        self.duration = 300
 
         self.particles = pygame.sprite.Group()
         self.stars = pygame.sprite.Group()
@@ -22,23 +22,19 @@ class VictoryCelebration:
         self.small_font = pygame.font.SysFont('Arial', 40)
 
     def start(self):
-        """Запускает анимацию победы."""
         self.active = True
         self.finished = False
         self.timer = 0
         self.particles.empty()
         self.stars.empty()
 
-        # Создаём звёздочки для фона
         for _ in range(50):
             star = CelebrationStar(self.screen_rect)
             self.stars.add(star)
 
-        # Первый залп салюта
         self._create_salvo()
 
     def _create_salvo(self):
-        """Создаёт залп салюта."""
         for _ in range(8):
             x = random.randint(100, self.screen_rect.width - 100)
             y = random.randint(100, self.screen_rect.height // 2)
@@ -46,46 +42,36 @@ class VictoryCelebration:
             self.particles.add(particle)
 
     def update(self):
-        """Обновляет анимацию."""
         if not self.active:
             return
 
         self.timer += 1
 
-        # Обновляем частицы
         for particle in self.particles.copy():
             particle.update()
             if particle.finished:
                 self.particles.remove(particle)
 
-        # Обновляем звёзды
         for star in self.stars.copy():
             star.update()
 
-        # Каждые 15 кадров новый залп
         if self.timer % 15 == 0 and self.timer < self.duration - 30:
             self._create_salvo()
 
-        # Завершение
         if self.timer >= self.duration:
             self.active = False
             self.finished = True
 
     def draw(self):
-        """Рисует анимацию."""
         if not self.active:
             return
 
-        # Тёмный фон
         self.screen.fill((5, 5, 30))
 
-        # Звёзды
         self.stars.draw(self.screen)
 
-        # Частицы салюта
         self.particles.draw(self.screen)
 
-        # Надпись "ПОБЕДА!"
         pulse = abs(pygame.math.Vector2(1, 0).rotate(self.timer * 3)[1])
         alpha = int(200 + 55 * pulse)
 
@@ -107,7 +93,6 @@ class VictoryCelebration:
         self.screen.blit(shadow_surf, shadow_rect)
         self.screen.blit(text_surf, text_rect)
 
-        # Подпись
         sub_text = "ЗЕМЛЯ СПАСЕНА!"
         sub_surf = self.small_font.render(sub_text, True, (255, 255, 255))
         sub_surf.set_alpha(alpha)
@@ -116,7 +101,6 @@ class VictoryCelebration:
         sub_rect.top = text_rect.bottom + 20
         self.screen.blit(sub_surf, sub_rect)
 
-        # Счёт
         score_text = f"Счёт: {self.ai_game.stats.total_score}  |  Пули: {self.ai_game.stats.bullets_fired}"
         score_surf = self.small_font.render(score_text, True, (200, 200, 200))
         score_surf.set_alpha(alpha)
@@ -130,7 +114,6 @@ class VictoryCelebration:
 
 
 class FireworkParticle(Sprite):
-    """Класс для частицы салюта."""
 
     def __init__(self, x, y, color_type='red'):
         super().__init__()
@@ -153,7 +136,6 @@ class FireworkParticle(Sprite):
         self.x = float(x)
         self.y = float(y)
 
-        # Скорость в случайном направлении
         angle = random.uniform(0, 360)
         speed = random.uniform(2, 6)
         self.speed_x = speed * pygame.math.Vector2(1, 0).rotate(angle)[0]
@@ -163,13 +145,11 @@ class FireworkParticle(Sprite):
         self.max_life = self.life
         self.finished = False
 
-        # След частицы
         self.trail = []
 
         self.update_surface()
 
     def update_surface(self):
-        """Обновляет изображение частицы."""
         self.image.fill((0, 0, 0, 0))
 
         progress = 1 - (self.life / self.max_life)
@@ -179,12 +159,10 @@ class FireworkParticle(Sprite):
             alpha = int(255 * (1 - progress))
             pygame.draw.circle(self.image, (self.color[0], self.color[1], self.color[2], alpha),
                              (self.size, self.size), int(current_size))
-            # Свечение
             pygame.draw.circle(self.image, (255, 255, 200, alpha // 2),
                              (self.size, self.size), int(current_size * 1.5), 1)
 
     def update(self):
-        """Обновляет частицу."""
         self.life -= 1
         if self.life <= 0:
             self.finished = True
@@ -192,7 +170,7 @@ class FireworkParticle(Sprite):
 
         self.x += self.speed_x
         self.y += self.speed_y
-        self.speed_y += 0.05  # Гравитация
+        self.speed_y += 0.05
 
         self.rect.centerx = int(self.x)
         self.rect.centery = int(self.y)
@@ -201,7 +179,6 @@ class FireworkParticle(Sprite):
 
 
 class CelebrationStar(Sprite):
-    """Класс для мерцающей звезды на фоне."""
 
     def __init__(self, screen_rect):
         super().__init__()
@@ -220,13 +197,11 @@ class CelebrationStar(Sprite):
         self.update_surface()
 
     def update_surface(self):
-        """Обновляет изображение звезды."""
         self.image.fill((0, 0, 0, 0))
         color = int(self.brightness)
         pygame.draw.circle(self.image, (color, color, color), (self.size, self.size), self.size)
 
     def update(self):
-        """Обновляет мерцание звезды."""
         self.brightness += self.speed * self.direction
         if self.brightness > 255:
             self.brightness = 255
