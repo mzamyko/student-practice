@@ -4,7 +4,6 @@ from pygame.sprite import Sprite
 
 
 class VictoryCelebration:
-    """Класс для анимации победы с салютом."""
 
     def __init__(self, ai_game):
         self.ai_game = ai_game
